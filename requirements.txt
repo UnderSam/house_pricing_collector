@@ -12,3 +12,4 @@ appdirs==1.4.4
 pyee==8.2.2
 pyppeteer==1.0.2
 websockets==10.3
+pymongo==4.2.0
