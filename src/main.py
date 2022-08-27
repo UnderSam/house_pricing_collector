@@ -144,9 +144,6 @@ async def house_scraper(args: argparse.Namespace) -> None:
         results = store_proc.get_collected_results()
         result_df = pd.DataFrame(results)
         result_df.to_csv(f'./{args.region_name}.csv')
-    
-    print('---------------------Failed task report---------------------')
-    print(store_proc.get_collected_faileds())
 
 
 def main() -> None:
@@ -155,9 +152,7 @@ def main() -> None:
     parser.add_argument('--region_name',
                         help='Region to scrape.',
                         choices=region_choices,
-                        default='taipei',
-                        )
-                        # required=True)
+                        required=True)
     parser.add_argument('--save_csv',
                         help='Save detailed results to csv.',
                         action='store_true')
