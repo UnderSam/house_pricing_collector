@@ -20,4 +20,3 @@ class HouseRecord():
     price: str = '0'
     price_unit: str = ''
     update_time: datetime = None
-
