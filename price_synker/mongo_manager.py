@@ -20,3 +20,5 @@ if __name__ == '__main__':
     manager = MongoManager()
     client = manager.house_records
     _ = client.find({}).limit(1)
+    # client.update_many({}, {'$unset': {'Unnamed: 0': 1}})
+    # client.update_many({ 'prefered_sex': 'None'}, { '$set': { 'prefered_sex': '男女' } }, True)
