@@ -1,4 +1,3 @@
-from ast import Store
 import asyncio
 from pyppeteer import launch
 from pyppeteer.network_manager import Response
@@ -13,6 +12,7 @@ from detail_worker import DetailWorker
 from store_utils import StoreProcedure 
 import pandas as pd
 from multiprocessing import Queue, Process
+from mongo_manager import MongoManager
 
 
 DEFAULT_WORKERS = 10
@@ -91,18 +91,31 @@ class BriefInfoParser():
             print('Parsing url: ', task_url)
             await page.goto(task_url)
             await page.waitFor(1000)
+    
+    def get_task_list(self) -> List[Dict[str, Any]]:
+        return self.task_list
 
 
-def prepare_di(args: argparse.Namespace, task_queue: Queue) -> None:
+async def prepare_di(args: argparse.Namespace, task_queue: Queue) -> None:
     di['args'] = args
     di['detail_task_queue'] = task_queue
     di[StoreProcedure] = StoreProcedure()
+    di[MongoManager] = MongoManager()
 
 
 def monitor(queue: Queue) -> None:
     while queue.qsize() != 0:
         print(f'Current queue size: {queue.qsize()}')
         sleep(5)
+
+
+def prepare_task_queue(brief_tasks: List[Dict[str, Any]], region_id: int) -> Queue:
+    task_queue = Queue()
+    for task in brief_tasks:
+        task['region'] = region_id
+        task_queue.put_nowait(task)
+    return task_queue
+
 
 async def house_scraper(args: argparse.Namespace) -> None:
     region_id = getattr(RegionCode, args.region_name)    
@@ -118,10 +131,7 @@ async def house_scraper(args: argparse.Namespace) -> None:
     await brief_parser.fetch_brief_info_from_datalist(page, neccessary_info, datalist_url)
     await browser.close()
 
-    task_queue = Queue()
-    for task in brief_parser.task_list:
-        task_queue.put_nowait(task)
-
+    task_queue = await prepare_task_queue(brief_parser.get_task_list(), region_id)
     prepare_di(args, task_queue)
 
     print('Start processing detail task.')
@@ -129,7 +139,7 @@ async def house_scraper(args: argparse.Namespace) -> None:
     workers = [DetailWorker.spawn_worker() for _ in range(DEFAULT_WORKERS)]
     for worker in workers:
         worker.start()
-        
+
     monitor_process = Process(target=monitor, args=(di['detail_task_queue'],))
     monitor_process.start()
 
@@ -160,10 +170,9 @@ def main() -> None:
                         help='Save detailed results to mongodb. (make sure setting was provided)',
                         action='store_true')
     args = parser.parse_args()
-
     print(args)
-
     asyncio.get_event_loop().run_until_complete(house_scraper(args))
+
 
 def test_main():
     test_original_url = UrlConfig.generate_original_method(RegionCode.taipei)

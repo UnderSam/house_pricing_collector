@@ -3,6 +3,7 @@ from typing import Dict, Any
 from pyppeteer import launch
 from pyppeteer.page import Page
 from multiprocessing import Process, Queue
+from price_synker.mongo_manager import MongoManager
 from url_utils import UrlConfig
 from kink import inject
 from store_utils import StoreProcedure
@@ -10,12 +11,13 @@ from store_utils import StoreProcedure
 
 @inject
 class DetailWorker():
-    def __init__(self, detail_task_queue: Queue, store_proc: StoreProcedure):
+    def __init__(self, detail_task_queue: Queue, store_proc: StoreProcedure, mongo_manager: MongoManager):
         self.task_queue = detail_task_queue
-        self.store_proc = store_proc 
+        self.store_proc = store_proc
+        self.mongo_manager = mongo_manager
 
     async def run(self):
-        browser = await launch() 
+        browser = await launch()
         page = await browser.newPage()
 
         try:
@@ -30,6 +32,7 @@ class DetailWorker():
                 for k, v in detailed_info.items():
                     brief_info[k] = v
 
+                self.mongo_manager.insert_house_records(brief_info)
                 self.store_proc.insert_result(brief_info)
                 await page.waitFor(1000)
         except Exception:
@@ -75,16 +78,7 @@ class DetailWorker():
 
     def process(self):
         asyncio.run(self.run())
-        
+
     @classmethod
     def spawn_worker(cls):
         return Process(target=cls().process)
-
-def main():
-    p = Process(target=DetailWorker().process)
-    p.start()
-    p.join()
-
-if __name__ == '__main__':
-    # asyncio.get_event_loop().run_until_complete(main())
-    main()
