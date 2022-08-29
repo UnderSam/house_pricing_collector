@@ -1,20 +1,25 @@
 import pymongo
 from typing import Dict, Any
 from env_config import config
+from pymongo.collection import Collection
 
 
 class MongoManager:
     def __init__(self) -> None:
-        self.client = pymongo.MongoClient(config['MONGO_CONNECT_URL'])
-        self.db = self.client[config['HOUSE_DB']]
-        self.house_records = self.db[config['HOUSE_COLLECTION']]
+        pass
 
-    def insert_or_update_house_records(self, detail_info: Dict[str, Any]) -> None:
+    def get_collection_of_house_records(self) -> Collection:
+        client = pymongo.MongoClient(config['MONGO_CONNECT_URL'])
+        db = client[config['HOUSE_DB']]
+        house_records = db[config['HOUSE_COLLECTION']]
+        return house_records
+
+    def insert_or_update_house_records(self, collection: Collection, detail_info: Dict[str, Any]) -> None:
         try:
             post_id = detail_info['post_id']
             query_info = {'post_id': post_id}
             update_info = {'$set': detail_info}
-            self.house_records.update_one(
+            collection.update_one(
                 query_info,
                 update_info,
                 upsert=True
