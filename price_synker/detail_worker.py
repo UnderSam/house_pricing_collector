@@ -3,7 +3,7 @@ from typing import Dict, Any
 from pyppeteer import launch
 from pyppeteer.page import Page
 from multiprocessing import Process, Queue
-from price_synker.mongo_manager import MongoManager
+from mongo_manager import MongoManager
 from url_utils import UrlConfig
 from kink import inject
 from store_utils import StoreProcedure
@@ -11,14 +11,16 @@ from store_utils import StoreProcedure
 
 @inject
 class DetailWorker():
-    def __init__(self, detail_task_queue: Queue, store_proc: StoreProcedure, mongo_manager: MongoManager):
+    def __init__(self, detail_task_queue: Queue, store_proc: StoreProcedure):
         self.task_queue = detail_task_queue
         self.store_proc = store_proc
-        self.mongo_manager = mongo_manager
+        self.task_between_ms = 500
 
     async def run(self):
         browser = await launch()
         page = await browser.newPage()
+        mongo_manager = MongoManager()
+        collection = mongo_manager.get_collection_of_house_records()
 
         try:
             while self.task_queue.qsize() != 0:
@@ -32,9 +34,9 @@ class DetailWorker():
                 for k, v in detailed_info.items():
                     brief_info[k] = v
 
-                self.mongo_manager.insert_or_update_house_records(brief_info)
+                mongo_manager.insert_or_update_house_records(collection, brief_info)
                 self.store_proc.insert_result(brief_info)
-                await page.waitFor(500)
+                await page.waitFor(self.task_between_ms)
         except Exception:
             raise
         finally:
@@ -75,7 +77,10 @@ class DetailWorker():
         return detailed_info
 
     def process(self):
-        asyncio.run(self.run())
+        try:
+            asyncio.run(self.run())
+        except Exception as e:
+            print('Worker Exception', e)
 
     @classmethod
     def spawn_worker(cls):
