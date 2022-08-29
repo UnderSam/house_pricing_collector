@@ -9,9 +9,16 @@ class MongoManager:
         self.db = self.client[config['HOUSE_DB']]
         self.house_records = self.db[config['HOUSE_COLLECTION']]
 
-    def insert_house_records(self, detail_info: Dict[str, Any]) -> None:
+    def insert_or_update_house_records(self, detail_info: Dict[str, Any]) -> None:
         try:
-            self.house_records.insert_one(detail_info)
+            post_id = detail_info['post_id']
+            query_info = {'post_id': post_id}
+            update_info = {'$set': detail_info}
+            self.house_records.update_one(
+                query_info,
+                update_info,
+                upsert=True
+            )
         except Exception as e:
             print(f'Insert failed: {e}')
 

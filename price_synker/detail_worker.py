@@ -32,9 +32,9 @@ class DetailWorker():
                 for k, v in detailed_info.items():
                     brief_info[k] = v
 
-                self.mongo_manager.insert_house_records(brief_info)
+                self.mongo_manager.insert_or_update_house_records(brief_info)
                 self.store_proc.insert_result(brief_info)
-                await page.waitFor(1000)
+                await page.waitFor(500)
         except Exception:
             raise
         finally:
