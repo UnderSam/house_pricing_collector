@@ -1,5 +1,4 @@
 from fastapi import APIRouter, Request
-from typing import List
 from fastapi_pagination import Page, paginate
 
 from ..models.house_record import HouseRecord

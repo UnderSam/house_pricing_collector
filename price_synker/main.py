@@ -12,7 +12,6 @@ from detail_worker import DetailWorker
 from store_utils import StoreProcedure 
 import pandas as pd
 from multiprocessing import Queue, Process
-from mongo_manager import MongoManager
 
 
 DEFAULT_WORKERS = 10
@@ -90,8 +89,8 @@ class BriefInfoParser():
         for task_url in datalist:
             print('Parsing url: ', task_url)
             await page.goto(task_url)
-            await page.waitFor(1000)
-    
+            await page.waitFor(100)
+
     def get_task_list(self) -> List[Dict[str, Any]]:
         return self.task_list
 
@@ -100,7 +99,6 @@ async def prepare_di(args: argparse.Namespace, task_queue: Queue) -> None:
     di['args'] = args
     di['detail_task_queue'] = task_queue
     di[StoreProcedure] = StoreProcedure()
-    di[MongoManager] = MongoManager()
 
 
 def monitor(queue: Queue) -> None:
@@ -109,7 +107,7 @@ def monitor(queue: Queue) -> None:
         sleep(5)
 
 
-def prepare_task_queue(brief_tasks: List[Dict[str, Any]], region_id: int) -> Queue:
+async def prepare_task_queue(brief_tasks: List[Dict[str, Any]], region_id: int) -> Queue:
     task_queue = Queue()
     for task in brief_tasks:
         task['region'] = region_id
@@ -132,7 +130,7 @@ async def house_scraper(args: argparse.Namespace) -> None:
     await browser.close()
 
     task_queue = await prepare_task_queue(brief_parser.get_task_list(), region_id)
-    prepare_di(args, task_queue)
+    await prepare_di(args, task_queue)
 
     print('Start processing detail task.')
 
