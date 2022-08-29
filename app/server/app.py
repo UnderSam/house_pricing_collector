@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from dotenv import dotenv_values
 from pymongo import MongoClient
 from .routes.house_record import router as RecordRouter
-from .routes.region_record import router as RegionRouter
+from fastapi_pagination import add_pagination
 
 config = dotenv_values(".env")
 app = FastAPI(
@@ -36,3 +36,5 @@ app.include_router(RecordRouter)
 @app.get('/')
 async def root():
     return {'message': 'Hello world!'}
+
+add_pagination(app)

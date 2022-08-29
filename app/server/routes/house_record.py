@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Request, HTTPException, status
 from typing import List
+from fastapi_pagination import Page, paginate
 
 from ..models.house_record import HouseRecord
 from .region_record import router as RegionRouter
@@ -13,10 +14,10 @@ router = APIRouter(
 router.include_router(RegionRouter)
 router.include_router(ContactRouter)
 
-@router.get("/", response_description="List all house records", response_model=List[HouseRecord])
+@router.get("/", response_description="List all house records", response_model=Page[HouseRecord])
 async def list_records(request: Request):
-    record = list(request.app.collection.find().limit(100))
-    return record
+    record = list(request.app.collection.find())
+    return paginate(record)
 
 
 @router.get("/{id}", response_description="Get a single house record by post_id", response_model=HouseRecord)
@@ -27,7 +28,7 @@ async def find_records(id: int, request: Request):
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"record with post ID {id} not found")
 
 
-@router.get("/phone_number/{phone_number}", response_description="Get a single house record by contact phone_number", response_model=List[HouseRecord])
+@router.get("/phone_number/{phone_number}", response_description="Get a single house record by contact phone_number", response_model=Page[HouseRecord])
 async def find_records(phone_number: str, request: Request):
     records = list(request.app.collection.find({"phone_number": { '$regex': phone_number}}))
-    return records
+    return paginate(records)

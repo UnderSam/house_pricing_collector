@@ -10,6 +10,8 @@ class ObjectIdStr(str):
 
     @classmethod
     def validate(cls, v):
+        if isinstance(v, str):
+            return v
         if not isinstance(v, ObjectId):
             raise ValueError("Not a valid ObjectId")
         return str(v)
