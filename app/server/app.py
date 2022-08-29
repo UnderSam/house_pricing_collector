@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from dotenv import dotenv_values
 from pymongo import MongoClient
 from .routes.house_record import router as RecordRouter
+from .routes.region_record import router as RegionRouter
 
 config = dotenv_values(".env")
 app = FastAPI(

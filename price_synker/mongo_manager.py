@@ -21,4 +21,8 @@ if __name__ == '__main__':
     client = manager.house_records
     _ = client.find({}).limit(1)
     # client.update_many({}, {'$unset': {'Unnamed: 0': 1}})
-    # client.update_many({ 'prefered_sex': 'None'}, { '$set': { 'prefered_sex': '男女' } }, True)
+    # client.update_many({ 'prefered_sex': '男'}, { '$set': { 'prefered_sex': 'boy' } }, True)
+    # client.update_many({ 'prefered_sex': '女'}, { '$set': { 'prefered_sex': 'girl' } }, True)
+    # client.update_many({ 'prefered_sex': '男女'}, { '$set': { 'prefered_sex': 'both' } }, True)
+    # client.update_many({ 'region_id': 1}, { '$set': { 'region_id': '臺北' } }, True)
+    # client.update_many({ 'region_id': 3}, { '$set': { 'region_id': '新北' } }, True)

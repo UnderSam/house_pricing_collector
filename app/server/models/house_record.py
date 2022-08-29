@@ -1,4 +1,3 @@
-import uuid
 from pydantic import BaseModel, Field
 from typing import Optional
 from bson import ObjectId
@@ -47,7 +46,7 @@ class HouseRecord(BaseModel):
     is_video: Optional[int] = Field(...)
     preferred: Optional[int] = Field(...)
     phone_number: Optional[str] = Field(...)
-    prefered_sex: Optional[str] = Field(...)
+    prefered_sex: str = Field(...)
     region: int = Field(...)
 
     class Config:
@@ -85,7 +84,7 @@ class HouseRecord(BaseModel):
                 'is_video': 0,
                 'preferred': 0,
                 'phone_number': '0970-116-359',
-                'prefered_sex': '男女',
+                'prefered_sex': 'both',
                 'region': 1,
             }
         }

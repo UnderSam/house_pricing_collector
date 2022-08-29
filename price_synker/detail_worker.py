@@ -42,13 +42,11 @@ class DetailWorker():
 
     async def fetch_detail_page(self, page: Page, post_id: int) -> Dict[str, str]:
         def prefered_sex_filter(notice: str) -> str:
-            prefered_sex = '男女'
-            if '男女皆可' in notice:
-                prefered_sex = '男女'
-            elif '限女生' in notice:
-                prefered_sex = '女'
+            prefered_sex = 'both'
+            if '限女生' in notice:
+                prefered_sex = 'girl'
             elif '限男生' in notice:
-                prefered_sex = '男'
+                prefered_sex = 'boy'
             return prefered_sex
 
         detailed_url = UrlConfig.generate_detailed_post_rul(post_id)
