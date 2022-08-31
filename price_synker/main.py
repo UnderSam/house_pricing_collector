@@ -3,15 +3,16 @@ from pyppeteer import launch
 from pyppeteer.network_manager import Response
 from pyppeteer.page import Page
 from typing import List, Dict, Any
-from url_utils import UrlConfig
 from kink import di
 import json
 from time import sleep
 import argparse
 from detail_worker import DetailWorker
-from store_utils import StoreProcedure 
 import pandas as pd
 from multiprocessing import Queue, Process
+
+from utils.store_utils import StoreProcedure 
+from utils.url_utils import UrlConfig
 
 
 DEFAULT_WORKERS = 10

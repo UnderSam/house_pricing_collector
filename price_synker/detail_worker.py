@@ -4,10 +4,11 @@ from pyppeteer import launch
 from pyppeteer.page import Page
 from datetime import datetime
 from multiprocessing import Process, Queue
-from mongo_manager import MongoManager
-from url_utils import UrlConfig
 from kink import inject
-from store_utils import StoreProcedure
+
+from utils.mongo_manager import MongoManager
+from utils.url_utils import UrlConfig
+from utils.store_utils import StoreProcedure
 
 
 @inject
