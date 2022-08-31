@@ -2,6 +2,7 @@ import asyncio
 from typing import Dict, Any
 from pyppeteer import launch
 from pyppeteer.page import Page
+from datetime import datetime
 from multiprocessing import Process, Queue
 from mongo_manager import MongoManager
 from url_utils import UrlConfig
@@ -33,6 +34,7 @@ class DetailWorker():
 
                 for k, v in detailed_info.items():
                     brief_info[k] = v
+                brief_info['update_datetime'] = datetime.utcnow()
 
                 mongo_manager.insert_or_update_house_records(collection, brief_info)
                 self.store_proc.insert_result(brief_info)

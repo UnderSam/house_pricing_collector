@@ -44,6 +44,8 @@ async def fetch_original_page_and_neccessary_info(page: Page, region_id: int) ->
 
     match_results_selector_path = '#rent-list-app > div > div.list-container-content > div > section.vue-public-list-page > div > span.TotalRecord > span'
     match_results_selector = await page.querySelector(match_results_selector_path)
+    if match_results_selector is None:
+        raise Exception('match_results not found.')
     result_size = await (await match_results_selector.getProperty('textContent')).jsonValue()
     result_size = str.strip(result_size) 
 
