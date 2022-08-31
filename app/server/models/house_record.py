@@ -1,3 +1,4 @@
+from datetime import datetime
 from pydantic import BaseModel, Field
 from typing import Optional
 from bson import ObjectId
@@ -50,6 +51,7 @@ class HouseRecord(BaseModel):
     phone_number: Optional[str] = Field(...)
     prefered_sex: str = Field(...)
     region: int = Field(...)
+    update_datetime: datetime = Field(...)
 
     class Config:
         arbitrary_types_allowed = True

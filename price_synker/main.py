@@ -3,15 +3,16 @@ from pyppeteer import launch
 from pyppeteer.network_manager import Response
 from pyppeteer.page import Page
 from typing import List, Dict, Any
-from url_utils import UrlConfig
 from kink import di
 import json
 from time import sleep
 import argparse
 from detail_worker import DetailWorker
-from store_utils import StoreProcedure 
 import pandas as pd
 from multiprocessing import Queue, Process
+
+from utils.store_utils import StoreProcedure 
+from utils.url_utils import UrlConfig
 
 
 DEFAULT_WORKERS = 10
@@ -44,6 +45,8 @@ async def fetch_original_page_and_neccessary_info(page: Page, region_id: int) ->
 
     match_results_selector_path = '#rent-list-app > div > div.list-container-content > div > section.vue-public-list-page > div > span.TotalRecord > span'
     match_results_selector = await page.querySelector(match_results_selector_path)
+    if match_results_selector is None:
+        raise Exception('match_results not found.')
     result_size = await (await match_results_selector.getProperty('textContent')).jsonValue()
     result_size = str.strip(result_size) 
 
