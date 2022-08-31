@@ -1,6 +1,6 @@
 from datetime import datetime
 from pydantic import BaseModel, Field
-from typing import Optional
+from typing import Optional, List, Dict, Union
 from bson import ObjectId
 
 
@@ -21,7 +21,7 @@ class ObjectIdStr(str):
 class HouseRecord(BaseModel):
     id: ObjectIdStr = Field(..., alias='_id')
     title: str = Field(...)
-    type: Optional[int] = Field(...)
+    type: Optional[Union[int, str]] = Field(...)
     post_id: int = Field(...)
     kind_name: Optional[str] = Field(...)
     room_str: Optional[str] = Field(...)
@@ -29,25 +29,25 @@ class HouseRecord(BaseModel):
     community: Optional[str] = Field(...)
     price: Optional[str] = Field(...)
     price_unit: Optional[str] = Field(...)
-    photo_list: Optional[str] = Field(...)
+    photo_list: Optional[List[str]] = Field(...)
     section_name: Optional[str] = Field(...)
     street_name: Optional[str] = Field(...)
     location: Optional[str] = Field(...)
-    rent_tag: Optional[str] = Field(...)
-    area: Optional[int] = Field(...)
+    rent_tag: Optional[List[Dict[str, str]]] = Field(...)
+    area: Optional[Union[int, str]] = Field(...)
     role_name: Optional[str] = Field(...)
     contact: Optional[str] = Field(...)
     refresh_time: Optional[str] = Field(...)
-    yesterday_hit: Optional[int] = Field(...)
-    is_vip: Optional[int] = Field(...)
-    is_combine: Optional[int] = Field(...)
-    hurry: Optional[int] = Field(...)
-    is_socail: Optional[int] = Field(...)
-    surrounding: Optional[str] = Field(...)
+    yesterday_hit: Optional[Union[int, str]] = Field(...)
+    is_vip: Optional[Union[int, str]] = Field(...)
+    is_combine: Optional[Union[int, str]] = Field(...)
+    hurry: Optional[Union[int, str]] = Field(...)
+    is_socail: Optional[Union[int, str]] = Field(...)
+    surrounding: Optional[Dict[str, str]] = Field(...)
     discount_price_str: Optional[str] = Field(...)
-    cases_id: Optional[int] = Field(...)
-    is_video: Optional[int] = Field(...)
-    preferred: Optional[int] = Field(...)
+    cases_id: Optional[Union[int, str]] = Field(...)
+    is_video: Optional[Union[int, str]] = Field(...)
+    preferred: Optional[Union[int, str]] = Field(...)
     phone_number: Optional[str] = Field(...)
     prefered_sex: str = Field(...)
     region: int = Field(...)
@@ -68,11 +68,11 @@ class HouseRecord(BaseModel):
                 'community': 'null',
                 'price': '8,333',
                 'price_unit': '元/月',
-                'photo_list': '[\'https://img2.591.com.tw/house/2022/08/07/165985253131308858.jpg!510x400.jpg\', \'https://img2.591.com.tw/house/2022/08/07/165985253131369589.jpg!510x400.jpg\', \'https://img1.591.com.tw/house/2022/08/07/165985253131345672.jpg!510x400.jpg\', \'https://img2.591.com.tw/house/2022/08/07/165985253131331232.jpg!510x400.jpg\', \'https://img2.591.com.tw/house/2022/08/07/165985253131412524.jpg!510x400.jpg\', \'https://img1.591.com.tw/house/2022/08/07/165985253131450378.jpg!510x400.jpg\', \'https://img2.591.com.tw/house/2022/08/07/165985253131444810.jpg!510x400.jpg\', \'https://img2.591.com.tw/house/2022/08/07/165985253131461875.jpg!510x400.jpg\', \'https://img2.591.com.tw/house/2022/08/07/165985253131554574.jpg!510x400.jpg\', \'https://img1.591.com.tw/house/2022/08/07/165985253131587639.jpg!510x400.jpg\', \'https://img1.591.com.tw/house/2022/08/07/165985253131585601.jpg!510x400.jpg\', \'https://img2.591.com.tw/house/2022/08/07/165985253131533156.jpg!510x400.jpg\', \'https://img1.591.com.tw/house/2022/08/07/165985253131632000.jpg!510x400.jpg\', \'https://img1.591.com.tw/house/2022/08/07/165985253131698358.jpg!510x400.jpg\', \'https://img2.591.com.tw/house/2022/08/07/165985253189586424.jpg!510x400.jpg\', \'https://img2.591.com.tw/house/2022/08/07/165985253196239423.jpg!510x400.jpg\', \'https://img1.591.com.tw/house/2022/08/07/165985253203246217.jpg!510x400.jpg\', \'https://img2.591.com.tw/house/2022/08/07/165985253234300218.jpg!510x400.jpg\', \'https://img1.591.com.tw/house/2022/08/07/165985253238128648.jpg!510x400.jpg\']',
+                'photo_list': ['https://img2.591.com.tw/house/2022/08/07/165985253131308858.jpg!510x400.jpg', 'https://img2.591.com.tw/house/2022/08/07/165985253131369589.jpg!510x400.jpg', 'https://img1.591.com.tw/house/2022/08/07/165985253131345672.jpg!510x400.jpg', 'https://img2.591.com.tw/house/2022/08/07/165985253131331232.jpg!510x400.jpg', 'https://img2.591.com.tw/house/2022/08/07/165985253131412524.jpg!510x400.jpg', 'https://img1.591.com.tw/house/2022/08/07/165985253131450378.jpg!510x400.jpg', 'https://img2.591.com.tw/house/2022/08/07/165985253131444810.jpg!510x400.jpg', 'https://img2.591.com.tw/house/2022/08/07/165985253131461875.jpg!510x400.jpg', 'https://img2.591.com.tw/house/2022/08/07/165985253131554574.jpg!510x400.jpg', 'https://img1.591.com.tw/house/2022/08/07/165985253131587639.jpg!510x400.jpg', 'https://img1.591.com.tw/house/2022/08/07/165985253131585601.jpg!510x400.jpg', 'https://img2.591.com.tw/house/2022/08/07/165985253131533156.jpg!510x400.jpg', 'https://img1.591.com.tw/house/2022/08/07/165985253131632000.jpg!510x400.jpg'],
                 'section_name': '士林區',
                 'street_name': '格致路',
                 'location': '士林區-格致路55巷36弄2號',
-                'rent_tag': '[]',
+                'rent_tag': [],
                 'area': 45,
                 'role_name': '代理人',
                 'contact': '楊小姐',
@@ -82,7 +82,7 @@ class HouseRecord(BaseModel):
                 'is_combine': 1,
                 'hurry': 0,
                 'is_socail': 0,
-                'surrounding': '{\'type\': \'bus_station\', \'desc\': \'距山仔后派出所\', \'distance\': \'200公尺\'}',
+                'surrounding': {'type': 'bus_station', 'desc': '距山仔后派出所', 'distance': '200公尺'},
                 'discount_price_str': 'null',
                 'cases_id': 0,
                 'is_video': 0,
